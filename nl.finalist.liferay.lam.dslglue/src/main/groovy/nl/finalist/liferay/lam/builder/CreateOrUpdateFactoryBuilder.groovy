@@ -1,5 +1,7 @@
-package nl.finalist.liferay.lam.builder;
+package nl.finalist.liferay.lam.builder
 
+import nl.finalist.liferay.lam.api.PortletPreferences
+import nl.finalist.liferay.lam.builder.factory.CreateOrUpdatePortletPreferencesFactory;
 import org.osgi.framework.Bundle;
 
 import groovy.util.FactoryBuilderSupport;
@@ -15,10 +17,11 @@ import nl.finalist.liferay.lam.builder.factory.CreateOrUpdateWebcontentFactory;
 class CreateOrUpdateFactoryBuilder extends FactoryBuilderSupport {
 
 
-    CreateOrUpdateFactoryBuilder(Structure structureService, Template templateService, ADT adtService, WebContent webContentService, Bundle bundle){
+    CreateOrUpdateFactoryBuilder(Structure structureService, Template templateService, ADT adtService, WebContent webContentService, PortletPreferences portletPreferences, Bundle bundle){
         registerFactory("structure", new CreateOrUpdateStructureFactory(structureService, bundle));
         registerFactory("template", new CreateOrUpdateTemplateFactory(templateService, bundle));
         registerFactory("ADT", new CreateOrUpdateADTFactory(adtService, bundle));
         registerFactory("webcontent", new CreateOrUpdateWebcontentFactory(webContentService, bundle));
+        registerFactory("portletPreferences", new CreateOrUpdatePortletPreferencesFactory(portletPreferences, bundle));
     }
 }

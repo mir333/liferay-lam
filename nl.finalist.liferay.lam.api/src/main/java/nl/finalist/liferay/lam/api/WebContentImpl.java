@@ -12,7 +12,6 @@ import com.liferay.journal.service.JournalArticleResourceLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.RoleConstants;
@@ -62,34 +61,29 @@ public class WebContentImpl implements WebContent {
     private ClassNameLocalService classNameLocalService;
     @Reference
     private DDMStructureLocalService ddmStructureLocalService;
+    @Reference
+    private ScopeHelper scopeHelper;
 
     private static final Log LOG = LogFactoryUtil.getLog(WebContentImpl.class);
 
     @Override
-    public void createOrUpdateWebcontent(String articleId, String siteFriendlyURL, Map<Locale,String> titleMap, String fileUrl, Bundle bundle,
-                    String urlTitle, String structureKey, String templateKey){
-        long globalGroupId = defaultValue.getGlobalGroupId();
-        long groupId = globalGroupId;
+    public void createOrUpdateWebcontent(String articleId, String siteKey, Map<Locale,String> titleMap, String fileUrl, Bundle bundle,
+                    String urlTitle,String structureLocationKey, String structureKey, String templateKey){
+        long ddmGroupId = scopeHelper.getGroupIdWithFallback(structureLocationKey);
+        long groupId = scopeHelper.getGroupIdWithFallback(siteKey);
         long companyId = defaultValue.getDefaultCompany().getCompanyId();
         long userId = defaultValue.getDefaultUserId();
         String xmlContent = getContentFromBundle(fileUrl, bundle);
         long classNameId = classNameLocalService.getClassNameId(JournalArticle.class.getName());
-        if(Validator.isNull(structureKey)|| Validator.isBlank(structureKey)){
+        if(Validator.isBlank(structureKey)){
             structureKey = "BASIC-WEB-CONTENT";
         }
-        if(Validator.isNull(templateKey) || Validator.isBlank(templateKey)){
+        if(Validator.isBlank(templateKey)){
             templateKey = "BASIC-WEB-CONTENT";
         }
-        DDMStructure ddmStructure = getStructure(structureKey, globalGroupId, classNameId);
-        if(Validator.isNotNull(siteFriendlyURL)  && !Validator.isBlank(siteFriendlyURL)){
-            Group group = groupLocalService.fetchFriendlyURLGroup(companyId, siteFriendlyURL);
-            if(Validator.isNotNull(group)){
-                groupId = group.getGroupId();
-            }
-            else{
-                LOG.error(String.format("Site %s can not be found, webcontent %s is added to global group", siteFriendlyURL, articleId));
-            }
-        }
+
+        DDMStructure ddmStructure = getStructure(structureKey, ddmGroupId, classNameId);
+
         JournalArticle webcontent = null;
         try {
             webcontent = journalArticleService.getArticle(groupId, articleId);

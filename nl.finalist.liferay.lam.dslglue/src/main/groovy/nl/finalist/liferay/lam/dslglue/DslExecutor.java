@@ -6,6 +6,7 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 
 import java.io.Reader;
 
+import nl.finalist.liferay.lam.api.*;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.osgi.framework.Bundle;
@@ -15,21 +16,6 @@ import org.osgi.service.component.annotations.Reference;
 
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
-import nl.finalist.liferay.lam.api.ADT;
-import nl.finalist.liferay.lam.api.Category;
-import nl.finalist.liferay.lam.api.CustomFields;
-import nl.finalist.liferay.lam.api.Page;
-import nl.finalist.liferay.lam.api.PortalProperties;
-import nl.finalist.liferay.lam.api.PortalSettings;
-import nl.finalist.liferay.lam.api.RoleAndPermissions;
-import nl.finalist.liferay.lam.api.Site;
-import nl.finalist.liferay.lam.api.Structure;
-import nl.finalist.liferay.lam.api.Tag;
-import nl.finalist.liferay.lam.api.Template;
-import nl.finalist.liferay.lam.api.User;
-import nl.finalist.liferay.lam.api.UserGroups;
-import nl.finalist.liferay.lam.api.Vocabulary;
-import nl.finalist.liferay.lam.api.WebContent;
 import nl.finalist.liferay.lam.builder.*;
 
 
@@ -73,6 +59,8 @@ public class DslExecutor implements Executor {
     private User userService;
     @Reference
     private Tag tagService;
+    @Reference
+    private PortletPreferences portletPreferences;
 
     @Activate
     public void activate() {
@@ -98,7 +86,7 @@ public class DslExecutor implements Executor {
         sharedData.setVariable("delete", new DeleteFactoryBuilder(customFieldsService, vocabularyService,
                         siteService, categoryService, webContentService, tagService, userService));
         sharedData.setVariable("createOrUpdate", new CreateOrUpdateFactoryBuilder(structureService,templateService,
-                        adtService, webContentService, bundle));
+                        adtService, webContentService, portletPreferences, bundle));
 
         sharedData.setVariable("Roles", new Roles());
         sharedData.setVariable("Entities", new Entities());

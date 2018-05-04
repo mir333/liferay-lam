@@ -19,11 +19,12 @@ public interface WebContent {
 	 * @param fileUrl The String relative url to the webcontent xml file 
 	 * @param bundle OSGi bundle containing the file
 	 * @param urlTitle urlTitle of the webcontent
+	 * @param structureLocationKey the location of the structure and template (defaults to global)
 	 * @param structureKey Key of the structure that is used for this content
 	 * @param templateKey Key of the template that is used for this content
 	 */
     void createOrUpdateWebcontent(String articleId, String siteFriendlyURL, Map<Locale,String> titleMap, String fileUrl, Bundle bundle,
-                    String urlTitle, String structureKey, String templateKey);
+                    String urlTitle,String structureLocationKey, String structureKey, String templateKey);
     /**
      * deletes webcontent in the Global group/site
      *
