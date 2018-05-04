@@ -7,7 +7,7 @@ class CreateFactoryBuilder extends FactoryBuilderSupport {
 
     CreateFactoryBuilder(CustomFields customFieldsService, Vocabulary vocabularyService, Site siteService, Category
             categoryService, UserGroups userGroupsService, RoleAndPermissions roleAndPermissionsService, Page
-            pageService, Tag tagService, User userService) {
+            pageService, Tag tagService,ForumCategory forumCategory, User userService) {
 
         registerFactory("customField", new CreateCustomFieldsFactory(customFieldsService));
         registerFactory("vocabulary", new CreateVocabularyFactory(vocabularyService));
@@ -17,8 +17,9 @@ class CreateFactoryBuilder extends FactoryBuilderSupport {
         registerFactory("role", new CreateRoleAndPermissionsFactory(roleAndPermissionsService));
         registerFactory("page", new CreatePageFactory(pageService));
         registerFactory("tag", new CreateTagFactory(tagService));
-        
+        registerFactory("forumCategory", new CreateForumCategoryFactory(forumCategory));
+
         registerFactory("user", new CreateUserFactory(userService));
     }
-   
+
 }

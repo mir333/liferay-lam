@@ -3,10 +3,10 @@ package nl.finalist.liferay.lam.dslglue;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
-
-import java.io.Reader;
-
+import groovy.lang.Binding;
+import groovy.lang.GroovyShell;
 import nl.finalist.liferay.lam.api.*;
+import nl.finalist.liferay.lam.builder.*;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.osgi.framework.Bundle;
@@ -14,9 +14,7 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import groovy.lang.Binding;
-import groovy.lang.GroovyShell;
-import nl.finalist.liferay.lam.builder.*;
+import java.io.Reader;
 
 
 
@@ -60,6 +58,8 @@ public class DslExecutor implements Executor {
     @Reference
     private Tag tagService;
     @Reference
+    private ForumCategory forumCategoryService;
+    @Reference
     private PortletPreferences portletPreferences;
 
     @Activate
@@ -76,9 +76,9 @@ public class DslExecutor implements Executor {
         // Add all available API classes to the context of the scripts
         sharedData.setVariable("LOG", LOG);
 
-        sharedData.setVariable("create", new CreateFactoryBuilder(customFieldsService, vocabularyService, siteService,
-                        categoryService, userGroupsService, roleAndPermissionsService, pageService, tagService,
-                        userService));
+        sharedData.setVariable("create", new CreateFactoryBuilder(customFieldsService, vocabularyService,
+                siteService, categoryService, userGroupsService, roleAndPermissionsService, pageService,
+                tagService, forumCategoryService, userService));
 
         sharedData.setVariable("update", new UpdateFactoryBuilder(portalSettingsService, vocabularyService,
                         siteService, categoryService, userService));
