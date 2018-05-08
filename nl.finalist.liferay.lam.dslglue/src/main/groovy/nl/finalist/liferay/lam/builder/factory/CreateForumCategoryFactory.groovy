@@ -21,6 +21,7 @@ class CreateForumCategoryFactory extends AbstractFactory {
     void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
         super.onNodeCompleted(builder, parent, node);
         ForumCategoryModel model = (ForumCategoryModel) node;
-        forumCategoryService.createForumCategory(model.siteKey, model.parent, model.name, model.description, model.displayStyle);
+        forumCategoryService.createForumCategory(model.siteKey, model.parent, model.name,
+                model.description, model.displayStyle, model.customFields);
     }
 }
