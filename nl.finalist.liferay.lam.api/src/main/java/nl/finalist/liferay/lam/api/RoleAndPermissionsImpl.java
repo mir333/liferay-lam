@@ -81,6 +81,10 @@ public class RoleAndPermissionsImpl implements RoleAndPermissions {
 	 * @throws PortalException
 	 */
 	private void addPermission(Long roleId, Long companyId, Map<String, List<String>> permissions) throws PortalException {
+		if(permissions == null){
+			return;
+		}
+
 		Set<String> entityNames = permissions.keySet();
 		for (String entityName : entityNames) {
 			List<String> actionIds = permissions.get(entityName);
