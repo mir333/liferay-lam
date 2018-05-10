@@ -38,15 +38,18 @@ public class CategoryImpl implements Category {
     @Reference
     private DefaultValue defaultValue;
 
+    @Reference
+    private ScopeHelper scopeHelper;
+
 
     @Override
-    public void addCategory(Map<Locale, String> categoryName, String vocabularyName, String title, String parentCategoryName) {
+    public void addCategory(String siteKey, Map<Locale, String> categoryName, String vocabularyName, String title, String parentCategoryName) {
         LOG.debug(String.format(
                         "Starting to add the category %s to vocabulary %s with title %s ",
                         categoryName, vocabularyName, title));
+        long groupId = scopeHelper.getGroupIdWithFallback(siteKey);
         try {
-            AssetVocabulary vocabulary = assetVocabularyLocalService.getGroupVocabulary(defaultValue.getGlobalGroupId(),
-                            vocabularyName);
+            AssetVocabulary vocabulary = assetVocabularyLocalService.getGroupVocabulary(groupId, vocabularyName);
             String[] existingCategoriesNames = assetCategoryService.getCategoryNames();
             boolean addCondition = true;
             for (String existingCategoryName : existingCategoriesNames) {
@@ -66,7 +69,7 @@ public class CategoryImpl implements Category {
                                     .findFirst()
                                     .orElse(0L);
                 }
-                assetCategoryService.addCategory(defaultValue.getDefaultUserId(), defaultValue.getGlobalGroupId(),
+                assetCategoryService.addCategory(defaultValue.getDefaultUserId(), groupId,
                                 parentCategoryId, categoryName, new HashMap<>(), vocabulary.getVocabularyId(), new String[0], new ServiceContext());
 
                 LOG.info(String.format("Added category %s to vocabulary %s", categoryName, vocabularyName));
@@ -83,13 +86,13 @@ public class CategoryImpl implements Category {
     }
 
     @Override
-    public void updateCategory(String categoryName, String vocabularyName, Map<Locale, String> updateName) {
+    public void updateCategory(String siteKey, String categoryName, String vocabularyName, Map<Locale, String> updateName) {
         LOG.debug(String.format(
                         "Starting to update category %s in vocabulary %s, the new name will be %s",
                         categoryName, vocabularyName, updateName));
+        long groupId = scopeHelper.getGroupIdWithFallback(siteKey);
         try {
-            AssetVocabulary vocabulary = assetVocabularyLocalService.getGroupVocabulary(defaultValue.getGlobalGroupId(),
-                            vocabularyName);
+            AssetVocabulary vocabulary = assetVocabularyLocalService.getGroupVocabulary(groupId, vocabularyName);
             List<AssetCategory> existingCategories = vocabulary.getCategories();
             for (AssetCategory existingCategory : existingCategories) {
                 if (existingCategory.getName().equals(categoryName)) {
@@ -114,12 +117,12 @@ public class CategoryImpl implements Category {
     }
 
     @Override
-    public void deleteCategory(String categoryName, String vocabularyName) {
+    public void deleteCategory(String siteKey, String categoryName, String vocabularyName) {
         LOG.debug(String.format("Starting to delete category %s from vocabulary %s", categoryName,
                         vocabularyName));
+        long groupId = scopeHelper.getGroupIdWithFallback(siteKey);
         try {
-            AssetVocabulary vocabulary = assetVocabularyLocalService.getGroupVocabulary(defaultValue.getGlobalGroupId(),
-                            vocabularyName);
+            AssetVocabulary vocabulary = assetVocabularyLocalService.getGroupVocabulary(groupId, vocabularyName);
             List<AssetCategory> existingCategories = vocabulary.getCategories();
             LOG.debug(String.format("number of categories is %d ", existingCategories.size()));
             for (AssetCategory existingCategory : existingCategories) {

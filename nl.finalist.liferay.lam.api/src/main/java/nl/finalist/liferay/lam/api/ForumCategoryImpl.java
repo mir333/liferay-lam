@@ -44,7 +44,7 @@ public class ForumCategoryImpl implements ForumCategory {
         ServiceContext serviceContext = new ServiceContext();
         serviceContext.setCompanyId(PortalUtil.getDefaultCompanyId());
         serviceContext.setScopeGroupId(groupId);
-
+        LOG.info(String.format("Adding forum category %s in site %s for parent %s", name, siteKey, parent));
         try {
             MBCategory mbCategory = mbCategoryLocalService.addCategory(userId, categoryId, name, description,
                     displayStyle, null, null, null, 0,

@@ -34,11 +34,14 @@ public class VocabularyImpl implements Vocabulary {
     @Reference
     private DefaultValue defaultValue;
 
+    @Reference
+    private ScopeHelper scopeHelper;
+
     private static final Log LOG = LogFactoryUtil.getLog(VocabularyImpl.class);
 
     @Override
-    public void addVocabulary(Map<Locale, String> vocabularyName) {
-        long groupId = defaultValue.getGlobalGroupId();
+    public void addVocabulary(String siteKey, Map<Locale, String> vocabularyName) {
+        long groupId = scopeHelper.getGroupIdWithFallback(siteKey);
         addVocabulary(vocabularyName, groupId);
     }
     
@@ -59,8 +62,8 @@ public class VocabularyImpl implements Vocabulary {
     }
 
     @Override
-    public void deleteVocabulary(String vocabularyName) {
-        long groupId = defaultValue.getGlobalGroupId();
+    public void deleteVocabulary(String siteKey, String vocabularyName) {
+        long groupId = scopeHelper.getGroupIdWithFallback(siteKey);
         deleteVocabulary(vocabularyName, groupId);
         LOG.info(String.format("Deleted vocabulary %s", vocabularyName));
     }
@@ -81,8 +84,8 @@ public class VocabularyImpl implements Vocabulary {
     }
 
     @Override
-    public void updateVocabularyTranslation(String existingName, Map<Locale, String> vocabularyName) {
-        long groupId = defaultValue.getGlobalGroupId();
+    public void updateVocabularyTranslation(String siteKey, String existingName, Map<Locale, String> vocabularyName) {
+        long groupId = scopeHelper.getGroupIdWithFallback(siteKey);
         updateVocabularyTranslation(vocabularyName, groupId, existingName);
         LOG.info(String.format("Updated vocabulary %s to add translation", vocabularyName));
     }

@@ -21,6 +21,7 @@ class UpdateCategoryFactory extends AbstractFactory {
     void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
         super.onNodeCompleted(builder, parent, node);
         CategoryModel category = (CategoryModel) node;
-        categoryService.updateCategory(category.categoryName, category.vocabularyName, LocaleMapConverter.convert(category.updateName));
+        categoryService.updateCategory(category.siteKey, category.categoryName, category.vocabularyName,
+                LocaleMapConverter.convert(category.updateName));
     }
 }

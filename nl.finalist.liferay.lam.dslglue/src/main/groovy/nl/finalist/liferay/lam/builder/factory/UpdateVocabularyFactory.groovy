@@ -22,6 +22,7 @@ class UpdateVocabularyFactory extends AbstractFactory {
         super.onNodeCompleted(builder, parent, node);
         VocabularyModel vocabulary = (VocabularyModel) node;
         
-        vocabularyService.updateVocabularyTranslation(vocabulary.existingName,LocaleMapConverter.convert(vocabulary.name));
+        vocabularyService.updateVocabularyTranslation(vocabulary.siteKey, vocabulary.existingName,
+                LocaleMapConverter.convert(vocabulary.name));
     }
 }

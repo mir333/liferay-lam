@@ -36,6 +36,7 @@ public class PortletPreferencesImpl implements PortletPreferences {
                     pageFriendlyURL, privatePage));
             return;
         }
+        LOG.info(String.format("Adding properties for portlet %s in site %s and on page %s", portletId, siteKey, pageFriendlyURL));
 
         javax.portlet.PortletPreferences portletPreferences;
         if (siteScope != null && siteScope) {

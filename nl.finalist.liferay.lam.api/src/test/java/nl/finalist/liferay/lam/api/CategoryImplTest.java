@@ -10,13 +10,6 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.PropsUtil;
-
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,9 +19,9 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.util.*;
+
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
@@ -56,19 +49,25 @@ public class CategoryImplTest {
     private ServiceContext mockServiceContext;
     @Mock
     private DefaultValue defaultValue;
+    @Mock
+    private ScopeHelper  scopeHelper;
 
     @InjectMocks
     private CategoryImpl categoryImpl;
 
+    String siteKey;
+
     @Before
     public void setUp() throws PortalException {
+        siteKey = "testSite";
         categoryImpl = new CategoryImpl();
         PowerMockito.mockStatic(PropsUtil.class);
         /*PowerMockito.when(PropsUtil.get("company.default.web.id")).thenReturn("liferay.com");
 		when(companyService.getCompanyByWebId("liferay.com")).thenReturn(company);*/
 
-
         initMocks(this);
+
+        when(scopeHelper.getGroupIdWithFallback(siteKey)).thenReturn(GLOBAL_GROUP_ID);
     }
 
     @Test
@@ -85,7 +84,7 @@ public class CategoryImplTest {
         .thenReturn(assetCategroy);
         Map<Locale, String> categoryNames = new HashMap<>();
         categoryNames.put(Locale.US, "StyleUS");
-        categoryImpl.addCategory(categoryNames, "test", "testing it", "");
+        categoryImpl.addCategory(siteKey, categoryNames, "test", "testing it", "");
         //verify(assetCategoryLocalService).addCategory(USER_ID, GLOBAL_GROUP_ID, categoryNames, 123L, mockServiceContext);
     }
 
@@ -103,7 +102,7 @@ public class CategoryImplTest {
         .thenReturn(assetCategroy);
         Map<Locale, String> categoryNames = new HashMap<>();
         categoryNames.put(Locale.US, "StyleUS");
-        categoryImpl.addCategory(categoryNames, "test", "testing it", "");
+        categoryImpl.addCategory(siteKey,categoryNames, "test", "testing it", "");
         verify(assetCategoryLocalService, never()).addCategory(USER_ID, GLOBAL_GROUP_ID, "Style", 123L, mockServiceContext);
     }
 
@@ -122,7 +121,7 @@ public class CategoryImplTest {
         when(assetCategoryLocalService.updateAssetCategory(assetCategroy)).thenReturn(assetCategroy);
         Map<Locale, String> categoryNames = new HashMap<>();
         categoryNames.put(Locale.US, "StyleUS");
-        categoryImpl.updateCategory("StyleUpdate", "vocabularyName", categoryNames);
+        categoryImpl.updateCategory(siteKey,"StyleUpdate", "vocabularyName", categoryNames);
         verify(assetCategoryLocalService).updateAssetCategory(assetCategroy);
     }
 
@@ -141,7 +140,7 @@ public class CategoryImplTest {
         when(assetCategoryLocalService.updateAssetCategory(assetCategroy)).thenReturn(assetCategroy);
         Map<Locale, String> categoryNames = new HashMap<>();
         categoryNames.put(Locale.US, "StyleUS");
-        categoryImpl.updateCategory("StyleNotUpdate", "vocabularyName", categoryNames);
+        categoryImpl.updateCategory(siteKey,"StyleNotUpdate", "vocabularyName", categoryNames);
         verify(assetCategoryLocalService, never()).updateAssetCategory(assetCategroy);
     }
 
@@ -156,7 +155,7 @@ public class CategoryImplTest {
         when(assetVocabularyLocalService.getGroupVocabulary(GLOBAL_GROUP_ID, "vocabularyName")).thenReturn(assetVocabulary);
         when(assetVocabulary.getCategories()).thenReturn(assetCategories);
         when(assetCategroy.getName()).thenReturn("StyleUpdate");
-        categoryImpl.deleteCategory("StyleDelete", "vocabularyName");
+        categoryImpl.deleteCategory(siteKey,"StyleDelete", "vocabularyName");
         verify(assetCategoryLocalService, never()).deleteCategory(assetCategroy);
     }
 
@@ -171,7 +170,7 @@ public class CategoryImplTest {
         when(assetVocabularyLocalService.getGroupVocabulary(GLOBAL_GROUP_ID, "vocabularyName")).thenReturn(assetVocabulary);
         when(assetVocabulary.getCategories()).thenReturn(assetCategories);
         when(assetCategroy.getName()).thenReturn("StyleUpdate");
-        categoryImpl.deleteCategory("StyleUpdate", "vocabularyName");
+        categoryImpl.deleteCategory(siteKey,"StyleUpdate", "vocabularyName");
         verify(assetCategoryLocalService).deleteCategory(assetCategroy);
     }
 }

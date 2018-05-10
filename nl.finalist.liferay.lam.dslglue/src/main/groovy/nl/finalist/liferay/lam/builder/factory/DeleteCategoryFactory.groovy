@@ -21,6 +21,6 @@ class DeleteCategoryFactory extends AbstractFactory {
     void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
         super.onNodeCompleted(builder, parent, node);
         CategoryModel category = (CategoryModel) node;
-        categoryService.deleteCategory(category.title, category.vocabularyName);
+        categoryService.deleteCategory(category.siteKey, category.title, category.vocabularyName);
     }
 }

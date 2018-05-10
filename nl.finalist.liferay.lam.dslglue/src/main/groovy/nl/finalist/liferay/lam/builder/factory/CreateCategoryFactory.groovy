@@ -21,6 +21,7 @@ class CreateCategoryFactory extends AbstractFactory {
     void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
         super.onNodeCompleted(builder, parent, node);
         CategoryModel category = (CategoryModel) node;
-        categoryService.addCategory(LocaleMapConverter.convert(category.name), category.vocabularyName, category.title, category.parentCategoryName);
+        categoryService.addCategory(category.siteKey, LocaleMapConverter.convert(category.name),
+                category.vocabularyName, category.title, category.parentCategoryName);
     }
 }
