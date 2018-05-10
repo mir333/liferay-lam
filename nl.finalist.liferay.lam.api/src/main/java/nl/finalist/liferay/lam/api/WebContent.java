@@ -15,6 +15,7 @@ public interface WebContent {
 	 * 
 	 * @param articleId id of the webcontent
 	 * @param siteFriendlyURL map of locale and site friendly urls
+	 * @param folderName the name of the folder where the content should be placed
 	 * @param titleMap map of locale and title
 	 * @param fileUrl The String relative url to the webcontent xml file 
 	 * @param bundle OSGi bundle containing the file
@@ -23,7 +24,7 @@ public interface WebContent {
 	 * @param structureKey Key of the structure that is used for this content
 	 * @param templateKey Key of the template that is used for this content
 	 */
-    void createOrUpdateWebcontent(String articleId, String siteFriendlyURL, Map<Locale,String> titleMap, String fileUrl, Bundle bundle,
+    void createOrUpdateWebcontent(String articleId, String siteFriendlyURL,String folderName, Map<Locale,String> titleMap, String fileUrl, Bundle bundle,
                     String urlTitle,String structureLocationKey, String structureKey, String templateKey);
     /**
      * deletes webcontent in the Global group/site

@@ -2,6 +2,7 @@ package nl.finalist.liferay.lam.api;
 
 import java.util.Map;
 
+import com.liferay.portal.kernel.service.UserGroupRoleLocalService;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -17,7 +18,9 @@ public class UserGroupsImpl implements UserGroups {
 
     @Reference
     private UserGroupLocalService userGroupLocalService;
-    
+	@Reference
+    private UserGroupRoleLocalService userGroupRoleLocalService;
+
     @Reference
     private CustomFields customFieldsService;
     
